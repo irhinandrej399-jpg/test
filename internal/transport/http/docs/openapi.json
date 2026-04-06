@@ -154,69 +154,74 @@
     },
     "schemas": {
       "CreateTaskRequest": {
-        "type": "object",
-        "required": ["title"],
-        "properties": {
-          "title": {
-            "type": "string",
-            "example": "Prepare release"
-          },
-          "description": {
-            "type": "string",
-            "example": "Collect release notes and check migrations"
-          },
-          "status": {
-            "type": "string",
-            "enum": ["new", "in_progress", "done"],
-            "example": "new"
-          }
-        }
-      },
-      "UpdateTaskRequest": {
-        "type": "object",
-        "required": ["title", "status"],
-        "properties": {
-          "title": {
-            "type": "string",
-            "example": "Prepare release"
-          },
-          "description": {
-            "type": "string",
-            "example": "Collect release notes and check migrations"
-          },
-          "status": {
-            "type": "string",
-            "enum": ["new", "in_progress", "done"],
-            "example": "in_progress"
-          }
-        }
-      },
-      "Task": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "integer", "format": "int64", "example": 1 },
-          "title": { "type": "string", "example": "Prepare release" },
-          "description": {
-            "type": "string",
-            "example": "Collect release notes and check migrations"
-          },
-          "status": {
-            "type": "string",
-            "enum": ["new", "in_progress", "done"],
-            "example": "new"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2026-03-24T00:00:00Z"
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2026-03-24T00:00:00Z"
-          }
-        }
-      },
+  "type": "object",
+  "required": ["title"],
+  "properties": {
+    "title": {
+      "type": "string",
+      "example": "Prepare release"
+    },
+    "description": {
+      "type": "string",
+      "example": "Collect release notes and check migrations"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["new", "in_progress", "done"],
+      "example": "new"
+    },
+    "recurrence_type": {
+      "type": "string",
+      "enum": ["daily", "monthly", "specific", "even", "odd"],
+      "example": "daily"
+    },
+    "recurrence_rule": {
+      "type": "string",
+      "example": "5,15,25" 
+    }
+  }
+},
+"UpdateTaskRequest": {
+  "type": "object",
+  "required": ["title", "status"],
+  "properties": {
+    "title": {
+      "type": "string",
+      "example": "Prepare release"
+    },
+    "description": {
+      "type": "string",
+      "example": "Collect release notes and check migrations"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["new", "in_progress", "done"],
+      "example": "in_progress"
+    },
+    "recurrence_type": {
+      "type": "string",
+      "enum": ["daily", "monthly", "specific", "even", "odd"],
+      "example": "monthly"
+    },
+    "recurrence_rule": {
+      "type": "string",
+      "example": "5,15,25"
+    }
+  }
+},
+  "Task": {
+    "type": "object",
+    "properties": {
+      "id": { "type": "integer", "format": "int64", "example": 1 },
+      "title": { "type": "string", "example": "Prepare release" },
+      "description": { "type": "string", "example": "Collect release notes and check migrations" },
+      "status": { "type": "string", "enum": ["new", "in_progress", "done"], "example": "new" },
+      "recurrence_type": { "type": "string", "enum": ["daily", "monthly", "specific", "even", "odd"], "example": "daily" },
+      "recurrence_rule": { "type": "string", "example": "5,15,25" },
+      "created_at": { "type": "string", "format": "date-time", "example": "2026-03-24T00:00:00Z" },
+      "updated_at": { "type": "string", "format": "date-time", "example": "2026-03-24T00:00:00Z" }
+    }
+  },
       "Error": {
         "type": "object",
         "properties": {

@@ -1,0 +1,5 @@
+ALTER TABLE tasks 
+ADD COLUMN IF NOT EXISTS recurrence_type TEXT;
+
+ALTER TABLE tasks 
+ADD COLUMN IF NOT EXISTS recurrence_rule TEXT;

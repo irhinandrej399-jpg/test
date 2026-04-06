@@ -28,20 +28,17 @@ func (s *Service) Create(ctx context.Context, input CreateInput) (*taskdomain.Ta
 	}
 
 	model := &taskdomain.Task{
-		Title:       normalized.Title,
-		Description: normalized.Description,
-		Status:      normalized.Status,
+		Title:          normalized.Title,
+		Description:    normalized.Description,
+		Status:         normalized.Status,
+		RecurrenceType: normalized.RecurrenceType,
+		RecurrenceRule: normalized.RecurrenceRule,
 	}
 	now := s.now()
 	model.CreatedAt = now
 	model.UpdatedAt = now
 
-	created, err := s.repo.Create(ctx, model)
-	if err != nil {
-		return nil, err
-	}
-
-	return created, nil
+	return s.repo.Create(ctx, model)
 }
 
 func (s *Service) GetByID(ctx context.Context, id int64) (*taskdomain.Task, error) {
@@ -63,19 +60,16 @@ func (s *Service) Update(ctx context.Context, id int64, input UpdateInput) (*tas
 	}
 
 	model := &taskdomain.Task{
-		ID:          id,
-		Title:       normalized.Title,
-		Description: normalized.Description,
-		Status:      normalized.Status,
-		UpdatedAt:   s.now(),
+		ID:             id,
+		Title:          normalized.Title,
+		Description:    normalized.Description,
+		Status:         normalized.Status,
+		RecurrenceType: normalized.RecurrenceType,
+		RecurrenceRule: normalized.RecurrenceRule,
+		UpdatedAt:      s.now(),
 	}
 
-	updated, err := s.repo.Update(ctx, model)
-	if err != nil {
-		return nil, err
-	}
-
-	return updated, nil
+	return s.repo.Update(ctx, model)
 }
 
 func (s *Service) Delete(ctx context.Context, id int64) error {
@@ -106,6 +100,14 @@ func validateCreateInput(input CreateInput) (CreateInput, error) {
 		return CreateInput{}, fmt.Errorf("%w: invalid status", ErrInvalidInput)
 	}
 
+	// Валидация периодичности
+	switch input.RecurrenceType {
+	case "", taskdomain.Daily, taskdomain.Monthly, taskdomain.Specific, taskdomain.EvenDays, taskdomain.OddDays:
+		// ок
+	default:
+		return CreateInput{}, fmt.Errorf("%w: invalid recurrence type", ErrInvalidInput)
+	}
+
 	return input, nil
 }
 
@@ -119,6 +121,13 @@ func validateUpdateInput(input UpdateInput) (UpdateInput, error) {
 
 	if !input.Status.Valid() {
 		return UpdateInput{}, fmt.Errorf("%w: invalid status", ErrInvalidInput)
+	}
+
+	switch input.RecurrenceType {
+	case "", taskdomain.Daily, taskdomain.Monthly, taskdomain.Specific, taskdomain.EvenDays, taskdomain.OddDays:
+		// ок
+	default:
+		return UpdateInput{}, fmt.Errorf("%w: invalid recurrence type", ErrInvalidInput)
 	}
 
 	return input, nil
